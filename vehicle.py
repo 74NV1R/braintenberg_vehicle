@@ -2,7 +2,7 @@ import pygame
 
 clock = pygame.time.Clock()
 
-resolution = (600, 300)
+resolution = (1000, 600)
 green = (0, 255, 75)
 red = (255, 0, 0)
 yellow = (120, 120, 0)
@@ -41,14 +41,16 @@ class Rectangle:
     def draw(self):
         pygame.draw.rect(self.screen, self.color, self.rect)
 
+    def accelarate(self):
+        self.speed_x = self.speed_x * 1.01
 
     def move(self):
         self.rect.x += self.speed_x
         self.rect.y += self.speed_y
 
 
-cir1  = Circle(x = 300, y = 150, radius=50, color=red, screen=screen)
-rect1 = Rectangle(x = 100, y = 150, height= 30, width=20, color = yellow, screen=screen)
+cir1  = Circle(x = 600, y = 350, radius=50, color=red, screen=screen)
+rect1 = Rectangle(x = 100, y = 150, height= 30, width=50, color = yellow, screen=screen)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -56,6 +58,7 @@ while running:
 
     screen.fill(black)
     cir1.draw()
+    rect1.accelarate()
     rect1.move()
     rect1.draw()
 
