@@ -10,9 +10,8 @@ black = (0, 0, 0)
 
 pygame.init()
 screen = pygame.display.set_mode(resolution)
+font = pygame.font.SysFont('Arial', 16)
 
-font = pygame.font.Font('freesansbold.ttf', 32)
-text = font.render('Speed: ')
 
 offset_x = 40
 offset_y = 10
@@ -49,15 +48,24 @@ class Rectangle:
     def accelarate(self, circle):
         distance = max(1, ((circle.x - self.x)**2 + (circle.y - self.y)**2)**0.5)
 
-        direction_x = (circle.x - self.x) / distance
+        step = (circle.x - self.x) / distance
             
-        self.speed_x += direction_x * (5/distance)
+        if abs(distance) < 5:  
+            self.speed_x = 0
+            return
+        
+        self.speed_x += step * (5/distance)
         
 
     def move(self):
         self.rect.x += self.speed_x
-        self.x = self.rect.x
+        self.x = abs(self.rect.x)
 
+
+def speedometer(screen, speed):
+    text = f"Speed: {abs(speed): .4f}"
+    text_surface = font.render(text, True, (255, 0, 0))  # White text
+    screen.blit(text_surface, (10, 10))
 
 source  = Circle(x = 600, y = 350, radius=50, color=red, screen=screen)
 car = Rectangle(x = 0, y = 100, height= 30, width=50, color = yellow, circle=source, screen=screen)
@@ -78,11 +86,11 @@ while running:
     
     #sensor.move()
 
-    sensor.rect.x = car.rect.x + offset_x  # e.g., offset_x = 10
-    sensor.rect.y = car.rect.y + offset_y  # e.g., offset_y = 0
+    sensor.rect.x = car.rect.x + offset_x
+    sensor.rect.y = car.rect.y + offset_y  
     car.draw()
     sensor.draw()
-
+    speedometer(screen, car.speed_x)
     pygame.display.flip()
     clock.tick(60)
 
