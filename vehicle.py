@@ -2,7 +2,7 @@ import pygame
 
 clock = pygame.time.Clock()
 
-resolution = (1000, 600)
+resolution = (1300, 600)
 green = (0, 255, 75)
 red = (255, 0, 0)
 yellow = (120, 120, 0)
@@ -10,6 +10,9 @@ black = (0, 0, 0)
 
 pygame.init()
 screen = pygame.display.set_mode(resolution)
+#font = pygame.font.Font('freesansbold.ttf', 32)
+#text = font.render('Speed: ')
+
 
 running = True
 
@@ -25,7 +28,7 @@ class Circle:
         pygame.draw.circle(self.screen, self.color, (self.x, self.y), self.radius)
 
 class Rectangle:
-    def __init__(self, x, y, height, width, color, screen):
+    def __init__(self, x, y, height, width, color, circle, screen):
         self.x = x
         self.y = y
         self.height = height
@@ -41,26 +44,34 @@ class Rectangle:
     def draw(self):
         pygame.draw.rect(self.screen, self.color, self.rect)
 
-    def accelarate(self):
-        self.speed_x = self.speed_x * 1.01
+    def accelarate(self, circle):
+        distance = max(1, ((circle.x - self.x)**2 + (circle.y - self.y)**2)**0.5)
+
+        direction_x = (circle.x - self.x) / distance
+            
+        self.speed_x += direction_x * (5/distance)
+        
 
     def move(self):
         self.rect.x += self.speed_x
-        self.rect.y += self.speed_y
 
 
-cir1  = Circle(x = 600, y = 350, radius=50, color=red, screen=screen)
-rect1 = Rectangle(x = 100, y = 150, height= 30, width=50, color = yellow, screen=screen)
+source  = Circle(x = 600, y = 350, radius=50, color=red, screen=screen)
+car = Rectangle(x = 0, y = 0, height= 30, width=50, color = yellow, circle=source, screen=screen)
+sensor = Rectangle(x = 40, y = 10, height= 10, width=10, color = red, circle=source, screen=screen)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
     screen.fill(black)
-    cir1.draw()
-    rect1.accelarate()
-    rect1.move()
-    rect1.draw()
+    source.draw()
+    car.accelarate(source)
+    sensor.accelarate(source)
+    car.move()
+    sensor.move()
+    car.draw()
+    sensor.draw()
 
     pygame.display.flip()
     clock.tick(60)
