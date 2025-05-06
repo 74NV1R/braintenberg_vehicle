@@ -10,10 +10,12 @@ black = (0, 0, 0)
 
 pygame.init()
 screen = pygame.display.set_mode(resolution)
-#font = pygame.font.Font('freesansbold.ttf', 32)
-#text = font.render('Speed: ')
 
+font = pygame.font.Font('freesansbold.ttf', 32)
+text = font.render('Speed: ')
 
+offset_x = 40
+offset_y = 10
 running = True
 
 class Circle:
@@ -54,11 +56,12 @@ class Rectangle:
 
     def move(self):
         self.rect.x += self.speed_x
+        self.x = self.rect.x
 
 
 source  = Circle(x = 600, y = 350, radius=50, color=red, screen=screen)
-car = Rectangle(x = 0, y = 0, height= 30, width=50, color = yellow, circle=source, screen=screen)
-sensor = Rectangle(x = 40, y = 10, height= 10, width=10, color = red, circle=source, screen=screen)
+car = Rectangle(x = 0, y = 100, height= 30, width=50, color = yellow, circle=source, screen=screen)
+sensor = Rectangle(x = 40, y = 110, height= 10, width=10, color = red, circle=source, screen=screen)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -66,10 +69,17 @@ while running:
 
     screen.fill(black)
     source.draw()
+
     car.accelarate(source)
-    sensor.accelarate(source)
     car.move()
-    sensor.move()
+
+
+    #sensor.accelarate(source)
+    
+    #sensor.move()
+
+    sensor.rect.x = car.rect.x + offset_x  # e.g., offset_x = 10
+    sensor.rect.y = car.rect.y + offset_y  # e.g., offset_y = 0
     car.draw()
     sensor.draw()
 
