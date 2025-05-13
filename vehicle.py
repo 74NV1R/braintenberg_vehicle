@@ -64,7 +64,7 @@ class Rectangle:
 
 def speedometer(screen, speed):
     text = f"Speed: {abs(speed): .4f}"
-    text_surface = font.render(text, True, (255, 0, 0))  # White text
+    text_surface = font.render(text, True, (255, 0, 0))
     screen.blit(text_surface, (10, 10))
 
 source  = Circle(x = 600, y = 350, radius=50, color=red, screen=screen)
