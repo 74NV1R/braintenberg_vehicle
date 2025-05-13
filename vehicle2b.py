@@ -45,16 +45,23 @@ class Rectangle:
     def draw(self):
         pygame.draw.rect(self.screen, self.color, self.rect)
 
-    def accelarate(self, circle):
-        distance = max(1, ((circle.x - self.x)**2 + (circle.y - self.y)**2)**0.5)
+    def accelerate(self, circle):
+   
+        dx = self.x - circle.x 
+        dy = self.y - circle.y 
+        distance = max(0.1, (dx**2 + dy**2)**0.5)  
+        
 
-        dir_x = (circle.x - self.x)/ distance
-        dir_y = (circle.y - self.y)/ distance
-
+        dir_x = dx / distance
+        dir_y = dy / distance
+        
         base_speed = 1000
+        repulsion_strength = 2
+        
+        self.speed_x = dir_x * (base_speed / distance) * repulsion_strength
+        self.speed_y = dir_y * (base_speed / distance) * repulsion_strength
 
-        self.speed_x = dir_x * (base_speed / distance)
-        self.speed_y = dir_y * (base_speed / distance)
+        
         
         
 
@@ -70,7 +77,7 @@ def speedometer(screen, speed):
     screen.blit(text_surface, (10, 10))
 
 source  = Circle(x = 600, y = 350, radius=50, color=red, screen=screen)
-car = Rectangle(x = 0, y = 100, height= 30, width=50, color = yellow, circle=source, screen=screen)
+car = Rectangle(x = 300, y = 300, height= 30, width=50, color = yellow, circle=source, screen=screen)
 sensor1 = Rectangle(x = 40, y = 110, height= 10, width=10, color = red, circle=source, screen=screen)
 sensor2 = Rectangle(x = 100, y = 110, height= 10, width=10, color = red, circle=source, screen=screen)
 
@@ -82,27 +89,19 @@ while running:
     screen.fill(black)
     source.draw()
 
-    car.accelarate(source)
+    car.accelerate(source)
     car.move()
 
-
-    #sensor.accelarate(source)
-    
-    #sensor.move()
-
     sensor1.rect.x = car.rect.x + 40   
-    sensor1.rect.y = car.rect.y + 20   
-    sensor2.rect.x = car.rect.x + 40  
+    sensor1.rect.y = car.rect.y + 20
+    sensor2.rect.x = car.rect.x + 40 
     sensor2.rect.y = car.rect.y + 0 
-
 
     car.draw()
     sensor1.draw()
     sensor2.draw()
     
-    speedometer(screen, car.speed_x)
+
+    speedometer(screen, car.speed_x)  # Show speed
     pygame.display.flip()
     clock.tick(60)
-
-
-pygame.quit()
