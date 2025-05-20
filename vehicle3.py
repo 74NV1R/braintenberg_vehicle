@@ -40,6 +40,7 @@ class Rectangle:
         pygame.draw.rect(self.screen, self.color, self.rect)
 
     def accelerate(self, circle):
+
         dx = circle.x - self.x if self.behavior == "attract" else self.x - circle.x
         dy = circle.y - self.y if self.behavior == "attract" else self.y - circle.y
         
@@ -47,9 +48,9 @@ class Rectangle:
         dir_x = dx / distance
         dir_y = dy / distance
         
-        base_speed = 500
-        self.speed_x = dir_x * (base_speed / distance)
-        self.speed_y = dir_y * (base_speed / distance)
+        base_speed = 0.05  
+        self.speed_x = dir_x * (base_speed * distance)
+        self.speed_y = dir_y * (base_speed * distance)
 
     def move(self):
         self.rect.x += self.speed_x
