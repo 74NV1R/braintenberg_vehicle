@@ -25,7 +25,42 @@ class Circle:
     def draw(self):
         pygame.draw.circle(self.screen, self.color, (self.x, self.y), self.radius)
 
+
+
 class Rectangle:
+    def __init__(self, x, y, height, width, color, screen, behavior="repel"):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.x = x + width//2 
+        self.y = y + height//2 
+        self.speed_x = 0
+        self.speed_y = 0
+        self.color = color
+        self.screen = screen
+        self.behavior = behavior
+
+        self.optimal_stimulus = 150
+        self.threshold = 50         
+
+    def accelerate(self, circle):
+        dx = circle.x - self.x if self.behavior == "attract" else self.x - circle.x
+        dy = circle.y - self.y if self.behavior == "attract" else self.y - circle.y
+        
+        distance = max(0.1, (dx**2 + dy**2)**0.5)
+        
+
+        if distance > self.threshold:
+            response = 1 - abs(distance - self.optimal_stimulus)/self.optimal_stimulus
+            response = max(0, min(1, response))
+        else:
+            response = 0  
+
+        dir_x = dx / distance
+        dir_y = dy / distance
+        
+        base_speed = 0.05  
+        self.speed_x = dir_x * (base_speed * distance * response)
+        self.speed_y = dir_y * (base_speed * distance * response)
+
     def __init__(self, x, y, height, width, color, screen, behavior="repel"):
         self.rect = pygame.Rect(x, y, width, height)
         self.x = x + width//2 
