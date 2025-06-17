@@ -100,7 +100,7 @@ def speedometer(screen, speed, x=10, y=10, label="Speed"):
 
 
 source = Circle(x=600, y=350, radius=50, color=red, screen=screen)
-car_repel = Rectangle(x=500, y=500, height=30, width=50, color=green, 
+car_repel = Rectangle(x=600, y=600, height=30, width=50, color=green, 
                        screen=screen, behavior="attract")
 car_attract = Rectangle(x=200, y=100, height=30, width=50, color=yellow, 
                      screen=screen, behavior="repel")
